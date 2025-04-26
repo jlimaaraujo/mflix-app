@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "npm run functions-install && npm run build"
   publish = "build"
   functions = "functions"
 
@@ -8,7 +8,8 @@
   targetPort = 3000
 
 [context.production.environment]
-  NODE_VERSION = "18.17.1"  
+  NODE_VERSION = "18.17.1"
+  MONGODB_URI = "your-mongodb-uri" # Make sure to set this in Netlify's environment variables
 
 [build.environment]
   CI = "false"
