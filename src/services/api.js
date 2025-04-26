@@ -1,16 +1,21 @@
 import axios from 'axios';
 
-const API_BASE = process.env.NODE_ENV === 'development'
-    ? 'http://localhost:8888/.netlify/functions'
-    : '/.netlify/functions';
+const API_BASE = '/.netlify/functions';
+
+const api = axios.create({
+    timeout: 10000,
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
 
 export const getMovies = async () => {
     try {
-        const response = await axios.get(`${API_BASE}/getMovies`);
-        return response.data;
+        const { data } = await api.get(`${API_BASE}/getMovies`);
+        return data;
     } catch (error) {
-        console.error('Error fetching movies:', error);
-        throw error;
+        console.error('API Error:', error.response?.data || error.message);
+        throw new Error(error.response?.data?.error || 'Failed to fetch movies');
     }
 };
 
