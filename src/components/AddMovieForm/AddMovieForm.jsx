@@ -133,7 +133,7 @@ const AddMovieForm = ({ open, onClose, onMovieAdded }) => {
                 }
             };
 
-            const result = await addMovie(movieToAdd);
+            await addMovie(movieToAdd);
             onMovieAdded();
             onClose();
             // Reset form after successful submission

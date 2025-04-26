@@ -6,7 +6,9 @@
 [dev]
   framework = "create-react-app"
   targetPort = 3000
-  autoLaunch = false
-  [dev.proxy]
-    api = "/api"
-    headers = { accept = "application/json" }  
+
+[context.production.environment]
+  NODE_VERSION = "18.17.1"  # Match your local Node version
+
+[build.environment]
+  CI = "false"

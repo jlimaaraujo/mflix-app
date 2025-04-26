@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Container, Typography, Button } from '@mui/material';
 import MovieCard from '../MovieCard/MovieCard';
-import ClearIcon from '@mui/icons-material/Clear'; // Add this import
+import ClearIcon from '@mui/icons-material/Clear';
 
 const MovieGrid = ({ movies, isSearchActive, searchQuery, clearSearch, onCardClick }) => {
     // Create pairs of movies for two-column layout
