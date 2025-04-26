@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  publish = "build"
+  functions = "functions"
+
+[dev]
+  framework = "create-react-app"
+  targetPort = 3000
+  autoLaunch = false
+  [dev.proxy]
+    api = "/api"
+    headers = { accept = "application/json" }  
