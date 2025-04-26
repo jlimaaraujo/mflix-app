@@ -9,7 +9,10 @@
 
 [context.production.environment]
   NODE_VERSION = "18.17.1"
-  MONGODB_URI = "your-mongodb-uri" # Make sure to set this in Netlify's environment variables
+  MONGODB_URI = "mongodb+srv://jlimaaraujo:Kp6SJKnGF7dxjK21@cluster0.xujacgq.mongodb.net/" # Set this in Netlify's environment variables
+  MONGODB_DB_NAME = "sample_mflix" 
+  MONGODB_COLLECTION_NAME = "movies"
+  MONGODB_COMMENTS_COLLECTION=comments
 
 [build.environment]
   CI = "false"
@@ -19,5 +22,9 @@
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = ["mongodb"]
-  timeout = 30 # seconds
+  
+  [functions.settings]
+    external_node_modules = ["mongodb"]
+  
+  [functions.timeout]
+    timeout = 30 # seconds
