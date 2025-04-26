@@ -12,7 +12,7 @@
   MONGODB_URI = "mongodb+srv://jlimaaraujo:Kp6SJKnGF7dxjK21@cluster0.xujacgq.mongodb.net/" # Set this in Netlify's environment variables
   MONGODB_DB_NAME = "sample_mflix" 
   MONGODB_COLLECTION_NAME = "movies"
-  MONGODB_COMMENTS_COLLECTION=comments
+  MONGODB_COMMENTS_COLLECTION="comments"
 
 [build.environment]
   CI = "false"
