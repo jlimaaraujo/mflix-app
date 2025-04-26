@@ -52,3 +52,13 @@ export const searchMovies = async (query) => {
         throw error;
     }
 };
+
+export const addMovie = async (movieData) => {
+    try {
+        const response = await axios.post(`${API_BASE}/addMovie`, movieData);
+        return response.data;
+    } catch (error) {
+        console.error('Error adding movie:', error);
+        throw error;
+    }
+};
