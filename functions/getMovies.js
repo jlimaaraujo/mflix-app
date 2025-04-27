@@ -1,6 +1,8 @@
 const { MongoClient } = require('mongodb');
 
 exports.handler = async (event, context) => {
+    console.log("MONGODB_URI:", process.env.MONGODB_URI);
+    console.log("DB Name:", process.env.MONGODB_DB_NAME);
     // Validate environment variables
     if (!process.env.MONGODB_URI) {
         return {
