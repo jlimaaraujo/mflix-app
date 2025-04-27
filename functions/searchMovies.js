@@ -1,41 +1,29 @@
 const { MongoClient } = require('mongodb');
 
-exports.handler = async (event) => {
-    if (!event.queryStringParameters?.query) {
-        return {
-            statusCode: 400,
-            body: JSON.stringify({ error: "Search query required" })
-        };
-    }
-
-    const client = new MongoClient(process.env.MONGODB_URI, {
-        connectTimeoutMS: 5000
-    });
+exports.handler = async (event, context) => {
+    const { query } = event.queryStringParameters;
+    const client = new MongoClient(process.env.MONGODB_URI);
 
     try {
         await client.connect();
-        const movies = await client.db()
-            .collection('movies')
+        const db = client.db(process.env.MONGODB_DB_NAME);
+
+        const movies = await db.collection(process.env.MONGODB_COLLECTION_NAME)
             .find({
-                title: { $regex: event.queryStringParameters.query, $options: 'i' }
+                title: { $regex: query, $options: 'i' } // Case-insensitive search
             })
-            .project({ title: 1, year: 1, poster: 1, _id: 1 })
             .limit(20)
             .toArray();
 
         return {
             statusCode: 200,
-            headers: { 
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(movies)
         };
     } catch (error) {
-        console.error('Search Error:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: "Search failed" })
+            body: JSON.stringify({ error: error.message })
         };
     } finally {
         await client.close();
