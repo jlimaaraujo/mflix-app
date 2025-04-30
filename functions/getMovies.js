@@ -1,38 +1,13 @@
 const { MongoClient } = require('mongodb');
 
 exports.handler = async (event, context) => {
-    console.log("MONGODB_URI:", process.env.MONGODB_URI);
-    console.log("DB Name:", process.env.MONGODB_DB_NAME);
-    // Validate environment variables
-    if (!process.env.MONGODB_URI) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: "MongoDB connection URI not configured" })
-        };
-    }
-
-    const client = new MongoClient(process.env.MONGODB_URI, {
-        connectTimeoutMS: 5000, // 5 seconds connection timeout
-        socketTimeoutMS: 30000, // 30 seconds socket timeout
-        serverApi: {
-            version: '1',
-            strict: true,
-            deprecationErrors: true
-        }
-    });
+    const client = new MongoClient(process.env.MONGODB_URI);
 
     try {
-        // Connect with timeout
-        await client.connect();
-        
-        // Get database and collection with fallbacks
-        const dbName = process.env.MONGODB_DB_NAME || 'sample_mflix';
-        const collectionName = process.env.MONGODB_COLLECTION_NAME || 'movies';
-        
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
+        await client.connect();        
+        const db = client.db(process.env.MONGODB_DB_NAME);
+        const collection = db.collection(process.env.MONGODB_COLLECTION_NAME);
 
-        // Get movies with projection to limit returned data
         const movies = await collection.find({})
             .project({
                 title: 1,
@@ -41,14 +16,14 @@ exports.handler = async (event, context) => {
                 year: 1,
                 _id: 1
             })
-            .limit(20)
+            .limit(100)
             .toArray();
 
         return {
             statusCode: 200,
             headers: { 
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*' // Enable CORS
+                'Access-Control-Allow-Origin': '*'
             },
             body: JSON.stringify(movies)
         };

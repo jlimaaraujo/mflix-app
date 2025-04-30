@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = '/.netlify/functions';
+const API_BASE = process.env.REACT_APP_API_BASE;
 
 const api = axios.create({
     timeout: 10000,

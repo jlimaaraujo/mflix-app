@@ -18,7 +18,6 @@ const MovieDetails = ({
     onClose,
     movieDetails,
     detailsLoading,
-    isValidImageUrl
 }) => {
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
@@ -45,8 +44,12 @@ const MovieDetails = ({
                                         objectFit: 'contain',
                                         borderRadius: 1
                                     }}
-                                    image={isValidImageUrl(movieDetails.poster) ? movieDetails.poster : `${process.env.PUBLIC_URL}/images/image.png`}
+                                    image={movieDetails.poster || `${process.env.PUBLIC_URL}/images/image.png`}
                                     alt={`${movieDetails.title} poster`}
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = `${process.env.PUBLIC_URL}/images/image.png`;
+                                    }}
                                 />
                             </Box>
                             <Box sx={{ flex: 2 }}>

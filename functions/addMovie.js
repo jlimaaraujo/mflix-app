@@ -1,7 +1,6 @@
 const { MongoClient, ObjectId } = require('mongodb');
 
 exports.handler = async (event, context) => {
-    // Only allow POST requests
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
@@ -20,7 +19,7 @@ exports.handler = async (event, context) => {
         const result = await db.collection(process.env.MONGODB_COLLECTION_NAME)
             .insertOne({
                 ...newMovie,
-                _id: new ObjectId(), // Generate new ID
+                _id: new ObjectId(),
                 lastupdated: new Date().toISOString()
             });
 

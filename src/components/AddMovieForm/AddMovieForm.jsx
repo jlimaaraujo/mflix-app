@@ -97,9 +97,7 @@ const AddMovieForm = ({ open, onClose, onMovieAdded }) => {
 
     const handleArrayChange = (e) => {
         const { name, value } = e.target;
-        const arrayValue = value.split(',').map(item => item.trim()).filter(item => item);
 
-        // Clear validation error when user types
         if (validationErrors[name]) {
             setValidationErrors(prev => ({
                 ...prev,
@@ -107,9 +105,11 @@ const AddMovieForm = ({ open, onClose, onMovieAdded }) => {
             }));
         }
 
+        // Store the raw string value temporarily
         setFormData(prev => ({
             ...prev,
-            [name]: arrayValue
+            [`${name}_raw`]: value,
+            [name]: value.split(',').map(item => item.trim()).filter(item => item)
         }));
     };
 
@@ -133,7 +133,7 @@ const AddMovieForm = ({ open, onClose, onMovieAdded }) => {
                 }
             };
 
-            const result = await addMovie(movieToAdd);
+            await addMovie(movieToAdd);
             onMovieAdded();
             onClose();
             // Reset form after successful submission
@@ -226,7 +226,7 @@ const AddMovieForm = ({ open, onClose, onMovieAdded }) => {
                                 fullWidth
                                 label="Directors (comma separated) *"
                                 name="directors"
-                                value={formData.directors.join(', ')}
+                                value={formData.directors_raw || formData.directors.join(', ')}
                                 onChange={handleArrayChange}
                                 error={!!validationErrors.directors}
                                 helperText={validationErrors.directors}
@@ -238,7 +238,7 @@ const AddMovieForm = ({ open, onClose, onMovieAdded }) => {
                                 fullWidth
                                 label="Cast (comma separated) *"
                                 name="cast"
-                                value={formData.cast.join(', ')}
+                                value={formData.cast_raw || formData.cast.join(', ')}
                                 onChange={handleArrayChange}
                                 error={!!validationErrors.cast}
                                 helperText={validationErrors.cast}
@@ -250,7 +250,7 @@ const AddMovieForm = ({ open, onClose, onMovieAdded }) => {
                                 fullWidth
                                 label="Genres (comma separated) *"
                                 name="genres"
-                                value={formData.genres.join(', ')}
+                                value={formData.genres_raw || formData.genres.join(', ')}
                                 onChange={handleArrayChange}
                                 error={!!validationErrors.genres}
                                 helperText={validationErrors.genres}

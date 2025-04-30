@@ -10,12 +10,6 @@ const SearchBar = ({
     clearSearch,
     isSearchActive
 }) => {
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
-            handleSearch();
-        }
-    };
-
     return (
         <Box sx={{
             display: 'flex',
@@ -29,7 +23,6 @@ const SearchBar = ({
                 placeholder="Search movies by title..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={handleKeyPress}
                 sx={{
                     maxWidth: 600,
                     '& .MuiOutlinedInput-root': {
