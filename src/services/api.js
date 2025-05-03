@@ -67,3 +67,32 @@ export const addMovie = async (movieData) => {
         throw error;
     }
 };
+
+export const addComment = async (movieId, name, email, text) => {
+    const response = await fetch('/.netlify/functions/addComment', {
+        method: 'POST',
+        body: JSON.stringify({ movieId, name, email, text }),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    return await response.json();
+};
+
+export const deleteComment = async (commentId) => {
+    try {
+        await axios.delete(`${API_BASE}/deleteComment`, { data: { commentId } });
+    } catch (error) {
+        console.error('Error deleting comment:', error);
+        throw error;
+    }
+};
+
+export const updateComment = async (commentId, text) => {
+    try {
+        await axios.put(`${API_BASE}/updateComment`, { commentId, text });
+    } catch (error) {
+        console.error('Error updating comment:', error);
+        throw error;
+    }
+};

@@ -1,24 +1,75 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { addComment, deleteComment, updateComment } from '../../services/api';
 import {
     Dialog,
-    DialogContent,
     DialogTitle,
+    DialogContent,
     Typography,
     Box,
-    CardMedia,
     Divider,
     List,
     ListItem,
     ListItemText,
-    CircularProgress
+    TextField,
+    Button,
+    CircularProgress,
+    CardMedia
 } from '@mui/material';
 
-const MovieDetails = ({
-    open,
-    onClose,
-    movieDetails,
-    detailsLoading,
-}) => {
+const MovieDetails = ({ open, onClose, movieDetails, detailsLoading }) => {
+    const [newComment, setNewComment] = useState({ name: '', email: '', text: '' });
+    const [editingComment, setEditingComment] = useState(null);
+    const [updatedText, setUpdatedText] = useState('');
+
+    const handleAddComment = async () => {
+        if (!newComment.name.trim() || !newComment.email.trim() || !newComment.text.trim()) {
+            console.error('Invalid input: All fields are required.');
+            return;
+        }
+        try {
+            const response = await addComment(movieDetails._id, newComment.name, newComment.email, newComment.text);
+
+            const comment = {
+                _id: response.comment._id,
+                name: response.comment.name,
+                email: response.comment.email,
+                text: response.comment.text,
+                date: response.comment.date
+            };
+
+            movieDetails.comments.push(comment);
+            setNewComment({ name: '', email: '', text: '' });
+        } catch (error) {
+            console.error('Error adding comment:', error);
+        }
+    };
+
+    const handleDeleteComment = async (commentId) => {
+        try {
+            await deleteComment(commentId);
+            movieDetails.comments = movieDetails.comments.filter(c => c._id !== commentId);
+        } catch (error) {
+            console.error('Error deleting comment:', error);
+        }
+    };
+
+    const handleUpdateComment = async (commentId) => {
+        if (!updatedText.trim()) return;
+        try {
+            await updateComment(commentId, updatedText);
+
+            const comment = movieDetails.comments.find(c => c._id === commentId);
+            if (comment) {
+                comment.text = updatedText;
+            }
+
+            setEditingComment(null);
+            setUpdatedText('');
+        } catch (error) {
+            console.error('Error updating comment:', error);
+        }
+    };
+
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
             <DialogTitle>
@@ -83,15 +134,44 @@ const MovieDetails = ({
                                 </Typography>
                                 {movieDetails.comments?.length > 0 ? (
                                     <List>
-                                        {movieDetails.comments.map((comment, index) => (
+                                        {movieDetails.comments.map((comment) => (
                                             <React.Fragment key={comment._id}>
                                                 <ListItem alignItems="flex-start">
-                                                    <ListItemText
-                                                        primary={comment.text}
-                                                        secondary={new Date(comment.date).toLocaleDateString()}
-                                                    />
+                                                    {editingComment === comment._id ? (
+                                                        <Box>
+                                                            <TextField
+                                                                value={updatedText}
+                                                                onChange={(e) => setUpdatedText(e.target.value)}
+                                                                fullWidth
+                                                            />
+                                                            <Button onClick={() => handleUpdateComment(comment._id)}>
+                                                                Save
+                                                            </Button>
+                                                            <Button onClick={() => setEditingComment(null)}>
+                                                                Cancel
+                                                            </Button>
+                                                        </Box>
+                                                    ) : (
+                                                        <ListItemText
+                                                            primary={`${comment.name || 'Unknown'} (${comment.email || 'No email'})`}
+                                                            secondary={
+                                                                <>
+                                                                    <Typography variant="body2" color="text.secondary">
+                                                                        {typeof comment.text === 'string' ? comment.text : JSON.stringify(comment.text)}
+                                                                    </Typography>
+                                                                    <Typography variant="caption" color="text.secondary">
+                                                                        {new Date(comment.date).toLocaleDateString()}
+                                                                    </Typography>
+                                                                </>
+                                                            }
+                                                        />
+                                                    )}
+                                                    <Button onClick={() => setEditingComment(comment._id)}>Edit</Button>
+                                                    <Button onClick={() => handleDeleteComment(comment._id)}>
+                                                        Delete
+                                                    </Button>
                                                 </ListItem>
-                                                {index < movieDetails.comments.length - 1 && <Divider />}
+                                                <Divider />
                                             </React.Fragment>
                                         ))}
                                     </List>
@@ -100,6 +180,33 @@ const MovieDetails = ({
                                         No comments yet
                                     </Typography>
                                 )}
+                                <Box sx={{ mt: 2 }}>
+                                    <TextField
+                                        value={newComment.name}
+                                        onChange={(e) => setNewComment({ ...newComment, name: e.target.value })}
+                                        label="Name"
+                                        fullWidth
+                                        sx={{ mb: 1 }}
+                                    />
+                                    <TextField
+                                        value={newComment.email}
+                                        onChange={(e) => setNewComment({ ...newComment, email: e.target.value })}
+                                        label="Email"
+                                        fullWidth
+                                        sx={{ mb: 1 }}
+                                    />
+                                    <TextField
+                                        value={newComment.text}
+                                        onChange={(e) => setNewComment({ ...newComment, text: e.target.value })}
+                                        label="Comment"
+                                        fullWidth
+                                        multiline
+                                        rows={3}
+                                    />
+                                    <Button onClick={handleAddComment} variant="contained" sx={{ mt: 1 }}>
+                                        Add Comment
+                                    </Button>
+                                </Box>
                             </Box>
                         </Box>
                     )
