@@ -144,10 +144,16 @@ const MovieDetails = ({ open, onClose, movieDetails, detailsLoading }) => {
                                                                 onChange={(e) => setUpdatedText(e.target.value)}
                                                                 fullWidth
                                                             />
-                                                            <Button onClick={() => handleUpdateComment(comment._id)}>
+                                                            <Button
+                                                                onClick={() => handleUpdateComment(comment._id)}
+                                                                sx={{ color: '#606c38' }}
+                                                            >
                                                                 Save
                                                             </Button>
-                                                            <Button onClick={() => setEditingComment(null)}>
+                                                            <Button
+                                                                onClick={() => setEditingComment(null)}
+                                                                sx={{ color: '#c93939' }}
+                                                            >
                                                                 Cancel
                                                             </Button>
                                                         </Box>
@@ -166,8 +172,8 @@ const MovieDetails = ({ open, onClose, movieDetails, detailsLoading }) => {
                                                             }
                                                         />
                                                     )}
-                                                    <Button onClick={() => setEditingComment(comment._id)}>Edit</Button>
-                                                    <Button onClick={() => handleDeleteComment(comment._id)}>
+                                                    <Button onClick={() => setEditingComment(comment._id)} sx={{ color: '#606c38' }}>Edit</Button>
+                                                    <Button onClick={() => handleDeleteComment(comment._id)} sx={{ color: '#606c38' }}>
                                                         Delete
                                                     </Button>
                                                 </ListItem>
@@ -203,7 +209,7 @@ const MovieDetails = ({ open, onClose, movieDetails, detailsLoading }) => {
                                         multiline
                                         rows={3}
                                     />
-                                    <Button onClick={handleAddComment} variant="contained" sx={{ mt: 1 }}>
+                                    <Button onClick={handleAddComment} variant="outlined" sx={{ mt: 1, color: '#606c38' }} color='#606c38'>
                                         Add Comment
                                     </Button>
                                 </Box>

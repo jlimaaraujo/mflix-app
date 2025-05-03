@@ -287,11 +287,13 @@ const AddMovieForm = ({ open, onClose, onMovieAdded }) => {
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={onClose} sx={{ color: '#c93939' }}>Cancel</Button>
                 <Button
                     onClick={handleSubmit}
-                    variant="contained"
+                    variant="outlined"
+                    color='#606c38'
                     disabled={loading}
+                    sx={{ color: '#606c38' }}
                 >
                     {loading ? 'Adding...' : 'Add Movie'}
                 </Button>

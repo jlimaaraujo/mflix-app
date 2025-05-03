@@ -46,19 +46,6 @@ const MovieCard = ({ movie, onClick }) => {
                 <Typography variant="h6" component="div" align="center">
                     <strong>{movie.title} ({movie.year})</strong>
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    <strong>Director:</strong> {movie.directors?.join(', ')}
-                    <br />
-                    <strong>Cast:</strong> {movie.cast?.slice(0, 3).join(', ')}{movie.cast?.length > 3 ? '...' : ''}
-                    <br />
-                    <strong>Genres:</strong> {movie.genres?.join(', ')}
-                    <br />
-                    <strong>Plot:</strong> {movie.plot?.substring(0, 100)}{movie.plot?.length > 100 ? '...' : ''}
-                    <br />
-                    <strong>Rating:</strong> {movie.imdb?.rating}
-                    <br />
-                    <strong>Runtime:</strong> {movie.runtime} minutes
-                </Typography>
             </CardContent>
         </Card>
     );

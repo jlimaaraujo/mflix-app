@@ -9,9 +9,11 @@ const api = axios.create({
     }
 });
 
-export const getMovies = async () => {
+export const getMovies = async (page = 1, limit = 10) => {
     try {
-        const { data } = await api.get(`${API_BASE}/getMovies`);
+        const { data } = await api.get(`${API_BASE}/getMovies`, {
+            params: { page, limit }
+        });
         return data;
     } catch (error) {
         console.error('API Error:', error.response?.data || error.message);

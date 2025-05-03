@@ -3,8 +3,11 @@ const { MongoClient } = require('mongodb');
 exports.handler = async (event, context) => {
     const client = new MongoClient(process.env.MONGODB_URI);
 
+    const { page = 1, limit = 10 } = event.queryStringParameters; // Default to page 1, 10 movies per page
+    const skip = (page - 1) * limit;
+
     try {
-        await client.connect();        
+        await client.connect();
         const db = client.db(process.env.MONGODB_DB_NAME);
         const collection = db.collection(process.env.MONGODB_COLLECTION_NAME);
 
@@ -16,32 +19,33 @@ exports.handler = async (event, context) => {
                 year: 1,
                 _id: 1
             })
-            .limit(100)
+            .skip(skip)
+            .limit(parseInt(limit))
             .toArray();
+
+        const totalMovies = await collection.countDocuments();
 
         return {
             statusCode: 200,
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
-            body: JSON.stringify(movies)
+            body: JSON.stringify({
+                movies,
+                totalMovies,
+                totalPages: Math.ceil(totalMovies / limit),
+                currentPage: parseInt(page)
+            })
         };
     } catch (error) {
         console.error('Database Error:', error);
         return {
             statusCode: 500,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                error: "Failed to fetch movies",
-                details: process.env.NETLIFY_DEV ? error.message : "Internal server error"
-            })
+            body: JSON.stringify({ error: "Failed to fetch movies" })
         };
     } finally {
-        try {
-            await client.close();
-        } catch (closeError) {
-            console.error('Connection close error:', closeError);
-        }
+        await client.close();
     }
 };

@@ -18,7 +18,7 @@ const MovieGrid = ({ movies, isSearchActive, searchQuery, clearSearch, onCardCli
             {isSearchActive && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                     <Typography variant="subtitle1">
-                        Search results for: "{searchQuery}" ({movies.length} movies found)
+                        Search results for: "{searchQuery}" ({movies.length} movie(s) found)
                     </Typography>
                 </Box>
             )}
@@ -30,8 +30,9 @@ const MovieGrid = ({ movies, isSearchActive, searchQuery, clearSearch, onCardCli
                     </Typography>
                     <Button
                         onClick={clearSearch}
-                        variant="contained"
-                        sx={{ mt: 2 }}
+                        variant="outlined"
+                        color="#fefae0"
+                        sx={{ mt: 2, color: '#283618' }}
                     >
                         Show all movies
                     </Button>
